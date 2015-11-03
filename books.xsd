@@ -1,30 +1,37 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-  <xs:element name="bookstore" type="bookstoreType"/>
-
-  <xs:complexType name="bookstoreType">
-    <xs:sequence> 
-      <xs:element name="book" type="bookType" minOccurs="0" maxOccurs="unbounded"/>
+  <xs:complexType name="BookStoreType">
+    <xs:sequence>
+      <xs:element name="book" type="BookType" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="bookType">
+  <xs:simpleType name="TitleType">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="2"/>
+      <xs:maxLength value="30"/>
+    </xs:restriction>
+  </xs:simpleType>
 
+  <xs:complexType name="BookType">
     <xs:sequence>
-
       <xs:element name="title">
-        <xs:complexType>
+        <xs:complexType mixed="true">
           <xs:simpleContent>
-              <xs:restriction base="titleType">
-                <xs:minLength value="2"/>
-                <xs:maxLength value="30"/>
-              </xs:restriction>
+            <xs:extension base="TitleType">
+              <xs:attribute name="lang" use="required">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:length value="2"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:extension>
           </xs:simpleContent>
         </xs:complexType>
       </xs:element>
-
-      <xs:element name="author" minOccurs="1" maxOccurs="unbounded">
+      <xs:element name="author" maxOccurs="unbounded">
         <xs:simpleType>
           <xs:restriction base="xs:string">
             <xs:minLength value="2"/>
@@ -32,7 +39,6 @@
           </xs:restriction>
         </xs:simpleType>
       </xs:element>
-
       <xs:element name="year">
         <xs:simpleType>
           <xs:restriction base="xs:integer">
@@ -41,7 +47,6 @@
           </xs:restriction>
         </xs:simpleType>
       </xs:element>
-
       <xs:element name="price">
         <xs:simpleType>
           <xs:restriction base="xs:decimal">
@@ -49,12 +54,9 @@
           </xs:restriction>
         </xs:simpleType>
       </xs:element>
-
     </xs:sequence>
-
     <xs:attribute name="category" type="xs:string" use="required"/>
-
-    <xs:attribute name="cover" use="optional">
+    <xs:attribute name="cover">
       <xs:simpleType>
         <xs:restriction base="xs:string">
           <xs:enumeration value="hardback"/>
@@ -62,21 +64,8 @@
         </xs:restriction>
       </xs:simpleType>
     </xs:attribute>
-
   </xs:complexType>
 
-  <!-- type for title to define attribute-->
-  <xs:complexType name="titleType">
-    <xs:simpleContent>
-      <xs:extension base="xs:string">
-        <xs:attribute name="lang" use="required">
-          <xs:simpleType>
-            <xs:restriction base="xs:string">
-              <xs:length value="2"/>
-            </xs:restriction>
-          </xs:simpleType>
-        </xs:attribute>
-      </xs:extension>
-    </xs:simpleContent>
-  </xs:complexType>
+  <xs:element name="bookstore" type="BookStoreType"/>
+
 </xs:schema>
